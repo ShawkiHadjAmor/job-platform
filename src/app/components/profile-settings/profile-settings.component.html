@@ -1,0 +1,175 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="p-8 sm:ml-64">
+  <div class="mb-6">
+    <a routerLink="/recruiter-dashboard" class="text-blue-600 hover:underline dark:text-blue-400">Recruiter Dashboard</a>
+    <span class="text-gray-600 dark:text-gray-400"> > Profile Settings</span>
+  </div>
+  <div class="p-6 bg-white">
+    <h3 class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Profile Settings</h3>
+    <!-- Display Company Logo -->
+    <div class="mb-4 flex justify-center">
+      <div class="relative">
+        <img *ngIf="profileData?.logo" [src]="getLogoUrl()" alt="Company Logo" class="h-24 w-24 object-contain rounded-lg">
+        <div *ngIf="!profileData?.logo" class="w-24 h-24 bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400">
+          No Logo
+        </div>
+      </div>
+    </div>
+    
+    <!-- Display Current Profile Data -->
+    <div class="mb-8 space-y-4">
+      <div><strong>Company Name:</strong> {{ profileData?.companyName || 'Not provided' }}</div>
+      <div><strong>Address:</strong> {{ profileData?.address || 'Not provided' }}</div>
+      <div><strong>Phone:</strong> {{ profileData?.phone || 'Not provided' }}</div>
+      <div><strong>Description:</strong> {{ profileData?.description || 'Not provided' }}</div>
+      <div><strong>Email:</strong> {{ profileData?.user?.email || 'Not provided' }}</div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="mb-8">
+      <h4 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Reviews</h4>
+      <div *ngIf="reviews.length === 0" class="text-gray-500 dark:text-gray-400">
+        No reviews yet.
+      </div>
+      <div *ngFor="let review of reviews" class="border-b border-gray-200 dark:border-gray-600 py-4">
+        <div class="flex items-center mb-2">
+          <div class="flex">
+            <span *ngFor="let star of [1,2,3,4,5]" class="material-icons text-yellow-400">
+              {{ star <= review.rating ? 'star' : 'star_border' }}
+            </span>
+          </div>
+          <span class="ml-2 text-gray-600 dark:text-gray-400">
+            by {{ review.reviewerName }} on {{ review.reviewDate | date:'shortDate' }}
+          </span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300">{{ review.comment || 'No comment provided' }}</p>
+      </div>
+    </div>
+    
+    <!-- Icon Buttons to Open Modals -->
+    <div class="flex justify-end space-x-4 mb-4">
+      <button (click)="openProfileModal()" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Edit Profile">
+        <span class="material-icons text-base">edit</span>
+      </button>
+      <button (click)="openEmailModal()" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Change Email">
+        <span class="material-icons text-base">email</span>
+      </button>
+      <button (click)="openPasswordModal()" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Change Password">
+        <span class="material-icons text-base">lock</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Update Modal -->
+  <div *ngIf="showProfileModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center" (click)="closeProfileModal()">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full custom-modal" (click)="$event.stopPropagation()">
+      <h3 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Update Profile</h3>
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-4">
+        <div>
+          <label for="companyName" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Company Name</label>
+          <input id="companyName" formControlName="companyName" type="text" placeholder="Enter company name" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="profileForm.get('companyName')?.invalid && profileForm.get('companyName')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Company name is required</div>
+        </div>
+        <div>
+          <label for="address" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Address</label>
+          <input id="address" formControlName="address" type="text" placeholder="Enter company address" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Address is required</div>
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Phone</label>
+          <input id="phone" formControlName="phone" type="text" placeholder="Enter phone number" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Phone number is required</div>
+        </div>
+        <div>
+          <label for="description" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Description</label>
+          <textarea id="description" formControlName="description" placeholder="Describe your company" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"></textarea>
+        </div>
+        <div>
+          <label for="logo" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Company Logo</label>
+          <input id="logo" type="file" accept="image/*" (change)="onLogoFileChange($event)" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <img *ngIf="photoPreview" [src]="photoPreview" alt="Logo Preview" class="mt-2 h-24 w-24 object-contain rounded-lg">
+        </div>
+        <div class="flex justify-end gap-4">
+          <button type="submit" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Save Changes" [disabled]="profileForm.invalid">
+            <span class="material-icons text-base">save</span>
+          </button>
+          <button type="button" (click)="closeProfileModal()" class="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600 dark:hover:bg-gray-400" title="Cancel">
+            <span class="material-icons text-base">cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Email Update Modal -->
+  <div *ngIf="showEmailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center" (click)="closeEmailModal()">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md" (click)="$event.stopPropagation()">
+      <h3 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Change Email</h3>
+      <form [formGroup]="emailForm" (ngSubmit)="updateEmail()" class="space-y-4">
+        <div>
+          <label for="emailCurrentPassword" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Current Password</label>
+          <input id="emailCurrentPassword" formControlName="currentPassword" type="password" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="emailForm.get('currentPassword')?.invalid && emailForm.get('currentPassword')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Current password is required</div>
+        </div>
+        <div>
+          <label for="newEmail" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">New Email</label>
+          <input id="newEmail" formControlName="newEmail" type="email" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="emailForm.get('newEmail')?.invalid && emailForm.get('newEmail')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">
+            <div *ngIf="emailForm.get('newEmail')?.errors?.['required']">New email is required</div>
+            <div *ngIf="emailForm.get('newEmail')?.errors?.['email']">Invalid email format</div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-4">
+          <button type="submit" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Save Email" [disabled]="emailForm.invalid">
+            <span class="material-icons text-base">save</span>
+          </button>
+          <button type="button" (click)="closeEmailModal()" class="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600 dark:hover:bg-gray-400" title="Cancel">
+            <span class="material-icons text-base">cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Password Update Modal -->
+  <div *ngIf="showPasswordModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center" (click)="closePasswordModal()">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md" (click)="$event.stopPropagation()">
+      <h3 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Change Password</h3>
+      <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="space-y-4">
+        <div>
+          <label for="currentPassword" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Current Password</label>
+          <input id="currentPassword" formControlName="currentPassword" type="password" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Current password is required</div>
+        </div>
+        <div>
+          <label for="newPassword" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">New Password</label>
+          <input id="newPassword" formControlName="newPassword" type="password" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">
+            <div *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</div>
+            <div *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 6 characters</div>
+          </div>
+        </div>
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Confirm New Password</label>
+          <input id="confirmPassword" formControlName="confirmPassword" type="password" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+          <div *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Confirm password is required</div>
+          <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched" class="text-red-500 dark:text-red-400 text-sm mt-1">Passwords do not match</div>
+        </div>
+        <div class="flex justify-end gap-4">
+          <button type="submit" class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 dark:hover:bg-blue-500" title="Save Password" [disabled]="passwordForm.invalid">
+            <span class="material-icons text-base">save</span>
+          </button>
+          <button type="button" (click)="closePasswordModal()" class="bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600 dark:hover:bg-gray-400" title="Cancel">
+            <span class="material-icons text-base">cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div *ngIf="showToast" class="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg dark:bg-green-600">
+    {{ toastMessage }}
+  </div>
+</div>

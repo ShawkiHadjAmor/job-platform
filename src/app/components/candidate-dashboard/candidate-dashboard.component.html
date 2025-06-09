@@ -1,0 +1,76 @@
+
+<div class="p-8 sm:ml-64">
+  <h2 class="text-2xl font-semibold text-blue-600 mb-6">Candidate Dashboard</h2>
+  
+  <!-- Job Search Component -->
+  <app-job-search (search)="searchJobs($event)"></app-job-search>
+  
+  <!-- Available Jobs -->
+  <h3 class="text-xl font-semibold text-blue-600 mb-4">Available Jobs</h3>
+  <div *ngIf="filteredJobs.length === 0" class="text-gray-500 mb-4">No jobs found.</div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let job of filteredJobs" class="border border-gray-300 p-4 rounded-lg bg-white shadow hover:shadow-lg transition-shadow">
+      <h4 class="text-lg font-semibold text-blue-600 mb-2">{{job.title}}</h4>
+      <p class="text-sm text-gray-700 mb-1"><strong>Location:</strong> {{job.location}}</p>
+      <p class="text-sm text-gray-700 mb-1"><strong>Salary:</strong> {{job.salaryRange}}</p>
+      <div class="flex gap-2 mt-3">
+        <button class="text-blue-600 hover:text-blue-800" (click)="openJobDetails(job)" title="View Details">
+          <span class="material-icons">info</span>
+        </button>
+        <button class="text-blue-600 hover:text-blue-800" (click)="openApplyModal(job)" title="Apply">
+          <span class="material-icons">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Details Modal -->
+  <div *ngIf="showJobDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-blue-600">Job Details</h3>
+        <span class="material-icons cursor-pointer text-gray-600" (click)="closeJobDetailsModal()">close</span>
+      </div>
+      <div *ngIf="selectedJob">
+        <p class="mb-2"><strong class="text-blue-600">Title:</strong> {{selectedJob.title}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Description:</strong> {{selectedJob.description || 'No description provided'}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Requirements:</strong> {{selectedJob.requirements || 'No requirements specified'}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Salary Range:</strong> {{selectedJob.salaryRange || 'Not specified'}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Location:</strong> {{selectedJob.location || 'Not specified'}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Category:</strong> {{selectedJob.category?.name || 'Not specified'}}</p>
+        <p class="mb-2"><strong class="text-blue-600">Recruiter:</strong> {{selectedJob.recruiter?.companyName || 'Not specified'}}</p>
+      </div>
+      <div class="flex justify-end mt-4">
+        <button class="text-blue-600 hover:text-blue-800" (click)="closeJobDetailsModal()" title="Close">
+          <span class="material-icons">close</span> Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Modal -->
+  <div *ngIf="showApplyModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-blue-600">Apply for {{selectedJob?.title}}</h3>
+        <span class="material-icons cursor-pointer text-gray-600" (click)="closeApplyModal()">close</span>
+      </div>
+      <form (ngSubmit)="applyForJob()">
+        <div class="mb-4">
+          <label for="coverLetterFile" class="block text-sm font-medium text-blue-600 mb-2">Upload Cover Letter (PDF)</label>
+          <input type="file" id="coverLetterFile" accept=".pdf" (change)="onFileSelected($event)" class="w-full p-2 border border-gray-300 rounded-lg">
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="text-blue-600 hover:text-blue-800" [disabled]="!coverLetterFile" title="Submit Application">
+            <span class="material-icons">upload</span> Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="fixed bottom-4 right-4 hidden bg-green-500 text-white p-4 rounded-lg shadow-lg">
+    <span id="toast-message"></span>
+  </div>
+</div>

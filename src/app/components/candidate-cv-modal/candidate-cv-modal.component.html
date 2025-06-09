@@ -1,0 +1,84 @@
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-3xl max-h-[60vh] min-h-[60vh] overflow-y-auto font-serif" style="max-height: 60vh; overflow-y: auto;">
+    <!-- Header with Photo and Basic Info -->
+    <div class="flex items-start border-b border-gray-200 pb-4 mb-6">
+      <img *ngIf="photo" [src]="photo" alt="Candidate Photo" class="w-32 h-32 rounded-lg object-cover mr-6 shadow-sm">
+      <div class="flex-1">
+        <h2 class="text-2xl font-bold text-gray-800">{{ candidate.name || 'Unknown' }}</h2>
+        <p class="text-sm text-gray-600 mt-1">{{ candidate.user?.email || 'N/A' }}</p>
+        <p class="text-sm text-gray-600">Nationality: {{ candidate.nationality || 'N/A' }}</p>
+        <p class="text-sm text-gray-600">Age: {{ candidate.age || 'N/A' }}</p>
+        <div *ngIf="candidate.socialMediaLinks?.length" class="mt-2">
+          <p class="text-sm font-semibold text-gray-700">Social Media:</p>
+          <a *ngFor="let link of candidate.socialMediaLinks" [href]="link" target="_blank" class="text-blue-600 hover:underline text-sm block">
+            {{ link }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CV Sections -->
+    <div class="grid grid-cols-1 gap-6">
+      <!-- Personal Description -->
+      <div *ngIf="candidate.description">
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">About</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">{{ candidate.description }}</p>
+      </div>
+
+      <!-- Languages -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Languages</h3>
+        <ul *ngIf="candidate.languages?.length" class="list-disc list-inside text-sm text-gray-600">
+          <li *ngFor="let lang of candidate.languages">{{ lang }}</li>
+        </ul>
+        <p *ngIf="!candidate.languages?.length" class="text-sm text-gray-600">No languages listed</p>
+      </div>
+
+      <!-- Education -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Education</h3>
+        <div *ngFor="let education of candidate.educations" class="mb-4">
+          <p class="text-sm font-semibold text-gray-700">{{ education.degree }} - {{ education.university }}</p>
+          <p class="text-sm text-gray-600">{{ education.startDate | date:'MMM yyyy' }} - {{ education.endDate ? (education.endDate | date:'MMM yyyy') : 'Present' }}</p>
+        </div>
+        <p *ngIf="!candidate.educations?.length" class="text-sm text-gray-600">No education listed</p>
+      </div>
+
+      <!-- Experience -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Experience</h3>
+        <div *ngFor="let experience of candidate.experiences" class="mb-4">
+          <p class="text-sm font-semibold text-gray-700">{{ experience.title }} - {{ experience.company }}</p>
+          <p class="text-sm text-gray-600">{{ experience.startDate | date:'MMM yyyy' }} - {{ experience.endDate ? (experience.endDate | date:'MMM yyyy') : 'Present' }}</p>
+          <p class="text-sm text-gray-600">{{ experience.description || 'No description provided' }}</p>
+        </div>
+        <p *ngIf="!candidate.experiences?.length" class="text-sm text-gray-600">No experience listed</p>
+      </div>
+
+      <!-- Skills -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Skills</h3>
+        <ul *ngIf="candidate.skills?.length" class="flex flex-wrap gap-2">
+          <li *ngFor="let skill of candidate.skills" class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
+            {{ skill.name }}
+          </li>
+        </ul>
+        <p *ngIf="!candidate.skills?.length" class="text-sm text-gray-600">No skills listed</p>
+      </div>
+
+      <!-- Additional Profile Info -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3">Additional Information</h3>
+        <p class="text-sm text-gray-600">Profile Created: {{ candidate.createdDate | date:'MMM dd, yyyy' }}</p>
+        <p class="text-sm text-gray-600">Last Modified: {{ candidate.lastModifiedDate | date:'MMM dd, yyyy' }}</p>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <div class="flex justify-end mt-6">
+      <button (click)="closeModal()" class="bg-gray-600 text-white py-2 px-6 rounded hover:bg-gray-700 transition-colors">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

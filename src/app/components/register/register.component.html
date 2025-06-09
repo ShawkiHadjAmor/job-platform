@@ -1,0 +1,389 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="grid-container">
+  <div class="image-section" *ngIf="!showCandidateForm && !showRecruiterForm"></div>
+  <div class="register-section">
+    <div class="register-card">
+      <h2 class="text-2xl font-semibold text-blue-600 mb-6 text-center">Register</h2>
+
+      <!-- Initial Selection Screen -->
+      <div *ngIf="!showCandidateForm && !showRecruiterForm" @fadeIn class="grid grid-cols-2 gap-16">
+        <div class="flex flex-col items-center cursor-pointer" (click)="showCandidateForm = true">
+          <span class="material-icons text-blue-600 icon-large">person</span>
+          <span class="text-lg text-gray-600 mt-2">Candidate</span>
+        </div>
+        <div class="flex flex-col items-center cursor-pointer" (click)="showRecruiterForm = true">
+          <span class="material-icons text-blue-600 icon-large">business</span>
+          <span class="text-lg text-gray-600 mt-2">Recruiter</span>
+        </div>
+      </div>
+      <div *ngIf="!showCandidateForm && !showRecruiterForm" class="flex justify-center mt-8">
+        <p class="text-base text-gray-600">Already have an account? <a routerLink="/" class="text-blue-600 font-semibold hover:underline">Login</a></p>
+      </div>
+
+      <!-- Candidate Registration -->
+      <div *ngIf="showCandidateForm" @fadeIn>
+        <div class="flex justify-between my-8">
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': step > 1}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': step >= 1}">1</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': step >= 1}">User Info</span>
+          </div>
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': step > 2}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': step >= 2}">2</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': step >= 2}">Profile</span>
+          </div>
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': step > 3}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': step >= 3}">3</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': step >= 3}">Languages & Social</span>
+          </div>
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': step > 4}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': step >= 4}">4</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': step >= 4}">Education & Experience</span>
+          </div>
+          <div class="flex-1 text-center">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': step >= 5}">5</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': step >= 5}">Skills & Confirm</span>
+          </div>
+        </div>
+
+        <!-- Step 1: User Info -->
+        <form *ngIf="step === 1" [formGroup]="userForm" (ngSubmit)="nextStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label for="email" class="block text-sm font-medium text-blue-600 mb-2">Email</label>
+            <input id="email" formControlName="email" type="email" placeholder="Enter your email" class="form-input">
+            <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('email')?.errors?.['required']">Email is required</div>
+              <div *ngIf="userForm.get('email')?.errors?.['email']">Invalid email format</div>
+              <div *ngIf="userForm.get('email')?.errors?.['emailExists']">Email already exists</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="block text-sm font-medium text-blue-600 mb-2">Password</label>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" class="form-input">
+            <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('password')?.errors?.['required']">Password is required</div>
+              <div *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="showCandidateForm = false">cancel</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextStep()" [ngClass]="{'text-gray-400': userForm.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <!-- Step 2: Profile -->
+        <form *ngIf="step === 2" [formGroup]="candidateProfileForm" (ngSubmit)="nextStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label for="name" class="block text-sm font-medium text-blue-600 mb-2">Name</label>
+            <input id="name" formControlName="name" type="text" placeholder="Enter your full name" class="form-input">
+            <div *ngIf="candidateProfileForm.get('name')?.invalid && candidateProfileForm.get('name')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="candidateProfileForm.get('name')?.errors?.['required']">Name is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description" class="block text-sm font-medium text-blue-600 mb-2">Description</label>
+            <textarea id="description" formControlName="description" placeholder="Describe yourself" class="form-input"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="nationality" class="block text-sm font-medium text-blue-600 mb-2">Nationality</label>
+            <input id="nationality" formControlName="nationality" type="text" placeholder="Enter your nationality" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="age" class="block text-sm font-medium text-blue-600 mb-2">Age</label>
+            <input id="age" formControlName="age" type="number" placeholder="Enter your age" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Profile Photo</label>
+            <button type="button" (click)="triggerFileInput('candidatePhoto')" class="register-button">
+              <span class="material-icons">add_a_photo</span>
+            </button>
+            <input id="candidatePhoto" type="file" accept="image/*" (change)="onFileChange($event, 'candidatePhoto')" class="hidden">
+            <img *ngIf="candidatePhoto" [src]="candidatePhoto" alt="Profile Photo Preview" class="mt-2 h-24 w-24 object-contain">
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextStep()" [ngClass]="{'text-gray-400': candidateProfileForm.get('name')?.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <!-- Step 3: Languages & Social Media -->
+        <form *ngIf="step === 3" [formGroup]="step3Form" (ngSubmit)="nextStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Languages</label>
+            <div formArrayName="languages">
+              <div *ngFor="let langControl of languages.controls; let i = index" class="flex items-center mb-4">
+                <input [formControlName]="i" placeholder="Enter language" class="form-input mr-3">
+                <span class="material-icons text-red-600 nav-button" (click)="removeLanguage(i)">delete</span>
+                <div *ngIf="langControl.invalid && langControl.touched" class="text-red-500 text-sm w-full mt-1">
+                  <div *ngIf="langControl.errors?.['required']">Language is required</div>
+                </div>
+              </div>
+            </div>
+            <span class="material-icons text-blue-600 nav-button" (click)="addLanguage()">add</span>
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Social Media Links</label>
+            <div formArrayName="socialMediaLinks">
+              <div *ngFor="let linkControl of socialMediaLinks.controls; let i = index" class="flex items-center mb-4">
+                <input [formControlName]="i" placeholder="Enter social media link" class="form-input mr-3">
+                <span class="material-icons text-red-600 nav-button" (click)="removeSocialMediaLink(i)">delete</span>
+              </div>
+            </div>
+            <span class="material-icons text-blue-600 nav-button" (click)="addSocialMediaLink()">add</span>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextStep()" [ngClass]="{'text-gray-400': step3Form.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <!-- Step 4: Education & Experience -->
+        <form *ngIf="step === 4" [formGroup]="step4Form" (ngSubmit)="nextStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Education</label>
+            <div formArrayName="educations">
+              <div *ngFor="let eduGroup of educations.controls; let i = index" class="border border-gray-300 p-4 mb-4 rounded-lg bg-gray-50" [formGroupName]="i">
+                <div class="mb-4">
+                  <label for="degree-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Degree</label>
+                  <input id="degree-{{i}}" formControlName="degree" type="text" placeholder="Degree" class="form-input">
+                  <div *ngIf="eduGroup.get('degree')?.invalid && eduGroup.get('degree')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="eduGroup.get('degree')?.errors?.['required']">Degree is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="university-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">University</label>
+                  <input id="university-{{i}}" formControlName="university" type="text" placeholder="University" class="form-input">
+                  <div *ngIf="eduGroup.get('university')?.invalid && eduGroup.get('university')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="eduGroup.get('university')?.errors?.['required']">University is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="startDate-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Start Date</label>
+                  <input id="startDate-{{i}}" formControlName="startDate" type="date" class="form-input">
+                  <div *ngIf="eduGroup.get('startDate')?.invalid && eduGroup.get('startDate')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="eduGroup.get('startDate')?.errors?.['required']">Start date is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="endDate-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">End Date</label>
+                  <input id="endDate-{{i}}" formControlName="endDate" type="date" class="form-input">
+                </div>
+                <span class="material-icons text-red-600 nav-button" (click)="removeEducation(i)">delete</span>
+              </div>
+            </div>
+            <span class="material-icons text-blue-600 nav-button" (click)="addEducation()">add</span>
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Experience</label>
+            <div formArrayName="experiences">
+              <div *ngFor="let expGroup of experiences.controls; let i = index" class="border border-gray-300 p-4 mb-4 rounded-lg bg-gray-50" [formGroupName]="i">
+                <div class="mb-4">
+                  <label for="company-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Company</label>
+                  <input id="company-{{i}}" formControlName="company" type="text" placeholder="Company name" class="form-input">
+                  <div *ngIf="expGroup.get('company')?.invalid && expGroup.get('company')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="expGroup.get('company')?.errors?.['required']">Company name is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="title-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Title</label>
+                  <input id="title-{{i}}" formControlName="title" type="text" placeholder="Job title" class="form-input">
+                  <div *ngIf="expGroup.get('title')?.invalid && expGroup.get('title')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="expGroup.get('title')?.errors?.['required']">Job title is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="startDate-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Start Date</label>
+                  <input id="startDate-{{i}}" formControlName="startDate" type="date" class="form-input">
+                  <div *ngIf="expGroup.get('startDate')?.invalid && expGroup.get('startDate')?.touched" class="text-red-500 text-sm mt-1">
+                    <div *ngIf="expGroup.get('startDate')?.errors?.['required']">Start date is required</div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label for="endDate-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">End Date</label>
+                  <input id="endDate-{{i}}" formControlName="endDate" type="date" class="form-input">
+                </div>
+                <div class="mb-4">
+                  <label for="description-{{i}}" class="block text-sm font-medium text-blue-600 mb-2">Description</label>
+                  <textarea id="description-{{i}}" formControlName="description" placeholder="Job description" class="form-input"></textarea>
+                </div>
+                <span class="material-icons text-red-600 nav-button" (click)="removeExperience(i)">delete</span>
+              </div>
+            </div>
+            <span class="material-icons text-blue-600 nav-button" (click)="addExperience()">add</span>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextStep()" [ngClass]="{'text-gray-400': step4Form.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <!-- Step 5: Skills & Confirmation -->
+        <div *ngIf="step === 5" class="mt-8">
+          <form [formGroup]="skillsForm" (ngSubmit)="registerCandidate()" class="space-y-6">
+            <div class="form-group">
+              <label class="block text-sm font-medium text-blue-600 mb-2">Skills</label>
+              <div formArrayName="skills">
+                <div *ngFor="let skillControl of skills.controls; let i = index" class="flex items-center mb-4">
+                  <input [formControlName]="i" placeholder="Enter skill" class="form-input mr-3">
+                  <span class="material-icons text-red-600 nav-button" (click)="removeSkill(i)">delete</span>
+                  <div *ngIf="skillControl.invalid && skillControl.touched" class="text-red-500 text-sm w-full mt-1">
+                    <div *ngIf="skillControl.errors?.['required']">Skill is required</div>
+                  </div>
+                </div>
+              </div>
+              <span class="material-icons text-blue-600 nav-button" (click)="addSkill()">add</span>
+            </div>
+            <button type="submit" class="register-button" [disabled]="skillsForm.invalid">Register</button>
+          </form>
+          <h3 class="text-lg font-semibold text-blue-600 mb-4 mt-6">Review Your Information</h3>
+          <div class="mb-4 space-y-2">
+            <p><strong>Email:</strong> {{ userForm.value.email }}</p>
+            <p><strong>Name:</strong> {{ candidateProfileForm.value.name }}</p>
+            <p><strong>Description:</strong> {{ candidateProfileForm.value.description || 'Not provided' }}</p>
+            <p><strong>Nationality:</strong> {{ candidateProfileForm.value.nationality || 'Not provided' }}</p>
+            <p><strong>Age:</strong> {{ candidateProfileForm.value.age || 'Not provided' }}</p>
+            <p><strong>Languages:</strong> {{ step3Form.value.languages.join(', ') || 'Not provided' }}</p>
+            <p><strong>Social Media Links:</strong> {{ step3Form.value.socialMediaLinks.join(', ') || 'Not provided' }}</p>
+            <div *ngIf="step4Form.value.experiences.length">
+              <p><strong>Experiences:</strong></p>
+              <ul class="list-disc pl-5">
+                <li *ngFor="let exp of step4Form.value.experiences">{{ exp.company }} - {{ exp.title }} ({{ exp.startDate }} - {{ exp.endDate || 'Present' }})</li>
+              </ul>
+            </div>
+            <div *ngIf="step4Form.value.educations.length">
+              <p><strong>Educations:</strong></p>
+              <ul class="list-disc pl-5">
+                <li *ngFor="let edu of step4Form.value.educations">{{ edu.degree }} - {{ edu.university }} ({{ edu.startDate }} - {{ edu.endDate || 'Present' }})</li>
+              </ul>
+            </div>
+            <div *ngIf="skillsForm.value.skills.length">
+              <p><strong>Skills:</strong></p>
+              <ul class="list-disc pl-5">
+                <li *ngFor="let skill of skillsForm.value.skills">{{ skill }}</li>
+              </ul>
+            </div>
+            <p *ngIf="candidatePhoto"><strong>Profile Photo:</strong> Uploaded</p>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="registerCandidate()" [ngClass]="{'text-gray-400': skillsForm.invalid}">check</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recruiter Registration (unchanged) -->
+      <div *ngIf="showRecruiterForm" @fadeIn>
+        <div class="flex justify-between my-8">
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': recruiterStep > 1}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': recruiterStep >= 1}">1</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': recruiterStep >= 1}">User Info</span>
+          </div>
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': recruiterStep > 2}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': recruiterStep >= 2}">2</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': recruiterStep >= 2}">Company Info</span>
+          </div>
+          <div class="flex-1 text-center relative" [ngClass]="{'after:content-[\'\'] after:absolute after:top-5 after:left-1/2 after:w-full after:h-1 after:bg-gray-200 after:z-[-1]': true, 'after:bg-blue-600': recruiterStep > 3}">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': recruiterStep >= 3}">3</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': recruiterStep >= 3}">Description & Logo</span>
+          </div>
+          <div class="flex-1 text-center">
+            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 font-semibold mb-2 mx-auto transition-all duration-300" [ngClass]="{'bg-blue-600 text-white': recruiterStep >= 4}">4</span>
+            <span class="text-sm text-gray-600" [ngClass]="{'text-blue-600': recruiterStep >= 4}">Confirmation</span>
+          </div>
+        </div>
+
+        <form *ngIf="recruiterStep === 1" [formGroup]="recruiterForm" (ngSubmit)="nextRecruiterStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label for="email" class="block text-sm font-medium text-blue-600 mb-2">Email</label>
+            <input id="email" formControlName="email" type="email" placeholder="Enter your email" class="form-input">
+            <div *ngIf="recruiterForm.get('email')?.invalid && recruiterForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="recruiterForm.get('email')?.errors?.['required']">Email is required</div>
+              <div *ngIf="recruiterForm.get('email')?.errors?.['email']">Invalid email format</div>
+              <div *ngIf="recruiterForm.get('email')?.errors?.['emailExists']">Email already exists</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="block text-sm font-medium text-blue-600 mb-2">Password</label>
+            <input id="password" formControlName="password" type="password" placeholder="Enter your password" class="form-input">
+            <div *ngIf="recruiterForm.get('password')?.invalid && recruiterForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="recruiterForm.get('password')?.errors?.['required']">Password is required</div>
+              <div *ngIf="recruiterForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="showRecruiterForm = false">cancel</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextRecruiterStep()" [ngClass]="{'text-gray-400': recruiterForm.get('email')?.invalid || recruiterForm.get('password')?.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <form *ngIf="recruiterStep === 2" [formGroup]="recruiterForm" (ngSubmit)="nextRecruiterStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label for="companyName" class="block text-sm font-medium text-blue-600 mb-2">Company Name</label>
+            <input id="companyName" formControlName="companyName" type="text" placeholder="Enter company name" class="form-input">
+            <div *ngIf="recruiterForm.get('companyName')?.invalid && recruiterForm.get('companyName')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="recruiterForm.get('companyName')?.errors?.['required']">Company name is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="address" class="block text-sm font-medium text-blue-600 mb-2">Address</label>
+            <input id="address" formControlName="address" type="text" placeholder="Enter company address" class="form-input">
+            <div *ngIf="recruiterForm.get('address')?.invalid && recruiterForm.get('address')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="recruiterForm.get('address')?.errors?.['required']">Address is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="phone" class="block text-sm font-medium text-blue-600 mb-2">Phone</label>
+            <input id="phone" formControlName="phone" type="text" placeholder="Enter phone number" class="form-input">
+            <div *ngIf="recruiterForm.get('phone')?.invalid && recruiterForm.get('phone')?.touched" class="text-red-500 text-sm mt-1">
+              <div *ngIf="recruiterForm.get('phone')?.errors?.['required']">Phone number is required</div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousRecruiterStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextRecruiterStep()" [ngClass]="{'text-gray-400': recruiterForm.get('companyName')?.invalid || recruiterForm.get('address')?.invalid || recruiterForm.get('phone')?.invalid}">arrow_forward</span>
+          </div>
+        </form>
+
+        <form *ngIf="recruiterStep === 3" [formGroup]="recruiterForm" (ngSubmit)="nextRecruiterStep()" class="mt-8 space-y-6">
+          <div class="form-group">
+            <label for="description" class="block text-sm font-medium text-blue-600 mb-2">Description</label>
+            <textarea id="description" formControlName="description" placeholder="Describe your company" class="form-input"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-600 mb-2">Company Logo</label>
+            <button type="button" (click)="triggerFileInput('recruiterPhoto')" class="register-button">
+              <span class="material-icons">add_a_photo</span>
+            </button>
+            <input id="recruiterPhoto" type="file" accept="image/*" (change)="onFileChange($event, 'recruiterPhoto')" class="hidden">
+            <img *ngIf="recruiterPhoto" [src]="recruiterPhoto" alt="Company Logo Preview" class="mt-2 h-24 w-24 object-contain">
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousRecruiterStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="nextRecruiterStep()">arrow_forward</span>
+          </div>
+        </form>
+
+        <div *ngIf="recruiterStep === 4" class="mt-8">
+          <h3 class="text-lg font-semibold text-blue-600 mb-4">Review Your Information</h3>
+          <div class="mb-4 space-y-2">
+            <p><strong>Email:</strong> {{ recruiterForm.value.email }}</p>
+            <p><strong>Company Name:</strong> {{ recruiterForm.value.companyName }}</p>
+            <p><strong>Address:</strong> {{ recruiterForm.value.address }}</p>
+            <p><strong>Phone:</strong> {{ recruiterForm.value.phone }}</p>
+            <p><strong>Description:</strong> {{ recruiterForm.value.description || 'Not provided' }}</p>
+            <p *ngIf="recruiterPhoto"><strong>Company Logo:</strong> Uploaded</p>
+          </div>
+          <div class="flex justify-end gap-4">
+            <span class="material-icons text-blue-600 nav-button" (click)="previousRecruiterStep()">arrow_back</span>
+            <span class="material-icons text-blue-600 nav-button" (click)="registerRecruiter()" [ngClass]="{'text-gray-400': recruiterForm.invalid}">check</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notification -->
+      <div id="toast" class="fixed bottom-4 right-4 p-4 rounded-lg shadow-lg text-white hidden">
+        <span id="toast-message"></span>
+      </div>
+    </div>
+  </div>
+</div>

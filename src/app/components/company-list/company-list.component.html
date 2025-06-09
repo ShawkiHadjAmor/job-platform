@@ -1,0 +1,22 @@
+<div class="p-8 sm:ml-64">
+  <div class="mb-6">
+    <a routerLink="/candidate-dashboard" class="text-blue-600 hover:underline dark:text-blue-400">Candidate Dashboard</a>
+    <span class="text-gray-600 dark:text-gray-400"> > Companies</span>
+  </div>
+  <h3 class="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Companies</h3>
+  <div *ngIf="companies.length === 0" class="text-gray-500 dark:text-gray-400">
+    No companies available.
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let company of companies" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow" (click)="viewCompanyDetails(company.id)">
+      <div class="flex justify-center mb-4">
+        <img *ngIf="company.logo" [src]="'data:image/png;base64,' + company.logo" alt="{{ company.companyName }} Logo" class="h-16 w-16 object-contain rounded-lg">
+        <div *ngIf="!company.logo" class="w-16 h-16 bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400">
+          No Logo
+        </div>
+      </div>
+      <h4 class="text-lg font-semibold text-blue-600 dark:text-blue-400">{{ company.companyName }}</h4>
+      <p class="text-gray-600 dark:text-gray-400">{{ company.description || 'No description provided' }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="p-8 sm:ml-64">
+  <div class="mb-6">
+    <a routerLink="/recruiter-dashboard" class="text-blue-600 hover:underline">Recruiter Dashboard</a>
+    <span> > Create Job Offer</span>
+  </div>
+  <div class="border border-gray-300 p-6 rounded">
+    <h3 class="text-xl font-semibold text-blue-600 mb-4">Create Job Offer</h3>
+    <form [formGroup]="jobOfferForm" (ngSubmit)="createJobOffer()">
+      <div class="mb-6">
+        <label for="title" class="block text-sm font-medium text-blue-600 mb-2">Title</label>
+        <input id="title" formControlName="title" type="text" placeholder="Enter job title" class="w-full p-2 border border-gray-300 rounded">
+      </div>
+      <div class="mb-6">
+        <label for="description" class="block text-sm font-medium text-blue-600 mb-2">Description</label>
+        <textarea id="description" formControlName="description" placeholder="Describe the job" class="w-full p-2 border border-gray-300 rounded"></textarea>
+      </div>
+      <div class="mb-6">
+        <label for="requirements" class="block text-sm font-medium text-blue-600 mb-2">Requirements</label>
+        <textarea id="requirements" formControlName="requirements" placeholder="List requirements" class="w-full p-2 border border-gray-300 rounded"></textarea>
+      </div>
+      <div class="mb-6">
+        <label for="salaryRange" class="block text-sm font-medium text-blue-600 mb-2">Salary Range</label>
+        <input id="salaryRange" formControlName="salaryRange" type="text" placeholder="Enter salary range" class="w-full p-2 border border-gray-300 rounded">
+      </div>
+      <div class="mb-6">
+        <label for="location" class="block text-sm font-medium text-blue-600 mb-2">Location</label>
+        <input id="location" formControlName="location" type="text" placeholder="Enter location" class="w-full p-2 border border-gray-300 rounded">
+      </div>
+      <div class="mb-6">
+        <label for="categoryId" class="block text-sm font-medium text-blue-600 mb-2">Category</label>
+        <select id="categoryId" formControlName="categoryId" class="w-full p-2 border border-gray-300 rounded">
+          <option value="" disabled selected>Select a category</option>
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+      </div>
+      <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" [disabled]="jobOfferForm.invalid">Create Job</button>
+    </form>
+  </div>
+</div>

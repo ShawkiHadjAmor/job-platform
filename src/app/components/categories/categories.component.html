@@ -1,0 +1,20 @@
+<div class="p-8 sm:ml-64">
+  <div class="mb-6">
+    <a routerLink="/recruiter-dashboard" class="text-blue-600 hover:underline">Recruiter Dashboard</a>
+    <span> > View All Categories</span>
+  </div>
+  <div class="border border-gray-300 p-6 rounded">
+    <h3 class="text-xl font-semibold text-blue-600 mb-4">All Categories</h3>
+    <div *ngIf="categories.length === 0; else categoryList" class="text-gray-600">
+      No categories available.
+    </div>
+    <ng-template #categoryList>
+      <ul class="space-y-2">
+        <li *ngFor="let category of categories" class="p-2 bg-gray-100 rounded flex justify-between items-center">
+          <span>{{ category.name }}</span>
+          <span class="text-sm text-gray-500">Created: {{ category.createdDate | date:'short' }}</span>
+        </li>
+      </ul>
+    </ng-template>
+  </div>
+</div>

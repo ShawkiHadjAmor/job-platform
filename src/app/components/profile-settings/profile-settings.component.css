@@ -1,0 +1,20 @@
+  .custom-modal {
+    max-width: 20rem; /* Smaller width */
+    max-height: 60vh; /* Smaller height */
+    overflow-y: auto; /* Enable vertical scrollbar */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #3b82f6 #e5e7eb; /* Firefox */
+  }
+  .custom-modal::-webkit-scrollbar {
+    width: 6px; /* Chrome, Safari */
+  }
+  .custom-modal::-webkit-scrollbar-track {
+    background: #e5e7eb; /* Light gray track */
+  }
+  .custom-modal::-webkit-scrollbar-thumb {
+    background: #3b82f6; /* Blue thumb */
+    border-radius: 3px;
+  }
+  .custom-modal::-webkit-scrollbar-thumb:hover {
+    background: #2563eb; /* Darker blue on hover */
+  }

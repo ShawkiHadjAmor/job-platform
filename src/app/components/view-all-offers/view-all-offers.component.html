@@ -1,0 +1,22 @@
+<div class="p-8 sm:ml-64">
+  <div class="mb-6">
+    <a routerLink="/recruiter-dashboard" class="text-blue-600 hover:underline">Recruiter Dashboard</a>
+    <span> > View All Offers</span>
+  </div>
+  <h3 class="text-xl font-semibold text-blue-600 mb-4">My Job Offers</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let job of jobs" class="border border-gray-300 p-4 rounded-lg bg-white shadow hover:shadow-lg transition-shadow">
+      <h4 class="text-lg font-semibold text-blue-600 mb-2">{{job.title}}</h4>
+      <p class="text-sm text-gray-700 mb-1"><strong>Location:</strong> {{job.location}}</p>
+      <p class="text-sm text-gray-700 mb-1"><strong>Salary:</strong> {{job.salaryRange}}</p>
+      <div class="flex gap-2 mt-3">
+        <button class="text-blue-600 hover:text-blue-800" (click)="viewOfferDetails(job.id)" title="View Details">
+          <span class="material-icons">visibility</span>
+        </button>
+        <button class="text-red-600 hover:text-red-800" (click)="deleteJobOffer(job.id)" title="Delete">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
